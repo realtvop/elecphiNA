@@ -1,0 +1,15 @@
+.card {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.img{
+    filter: blur(0px);
+}
+.fullWidth {
+	width: 100%;
+	height: min-content;
+}
+.hide {
+	display: none;
+}
