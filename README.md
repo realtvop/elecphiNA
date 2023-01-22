@@ -24,10 +24,12 @@
 | macOS (Electron) | Ventura(13 Beta 22A5331f) | 完美 |
 | Windows (Electron) | 11 (22000) | 完美 |
 | Windows (Electron) | 10 LTSC 2021 | 完美 |
-| HarmonyOS 2 华为浏览器 | ? | 很好 |
+| HarmonyOS 2 华为浏览器 | ? | 勉强 |
 | Chrumium 系桌面端浏览器 | 100+ | 完美 |
 | Safari on macOS | 16.1 (18614.2.1.1.1) | 较好 |
 | UOS (Electron) | 20 | 完美 |
+| Edge on Android | 108 | 勉强 |
+| Kiwi Browser | 108 | 断触严重 |
 
 ### 联系作者
 Tip:本人作为苦逼初中~~洛天依~~(ge ji)一个,时间十分宝贵.如没有**极其重要**的事请不要直接联系作者,优先在`GitHub`提出Issue.

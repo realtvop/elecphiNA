@@ -1372,7 +1372,7 @@ function loop() {
 	ctx.globalAlpha = 0.8;
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
-	ctx.fillText(`Elecphi v${APPVERSION} by 飞机上的长电视 with lchzh3473/sim-phi - ${showPlatform}`, (canvas.width + canvasos.width) / 4, y);
+	if (autoplay.checked !== "6") ctx.fillText(`Elecphi v${APPVERSION} by 飞机上的长电视 with lchzh3473/sim-phi - ${showPlatform}`, (canvas.width + canvasos.width) / 4, y);
 	/* ctx.textAlign = "left";
 	if (showInfo.checked) {
 		ctx.fillText(`Player:${isAutoplay ? "AUTO" : window.localStorage.getItem("playerName")}     Chart: ${$("input-designer").value}     Illustration: ${$("input-illustrator").value}`, (canvas.width + canvasos.width) / 2 - canvasos.width + lineScale * 0.1, y);
@@ -1575,7 +1575,7 @@ function qwqdraw1(now) {
 	//ctxos.textAlign = "center";
 	if(stat.noteRank[5] + stat.noteRank[7] > stat.noteRank[1] + stat.noteRank[3])ctxos.fillStyle = "#0f0";
 	if(stat.noteRank[5] + stat.noteRank[7] < stat.noteRank[1] + stat.noteRank[3])ctxos.fillStyle = "#6cf";
-	ctxos.fillText(`${stat.accStr}`, canvasos.width - lineScale * 0.65, lineScale * 2);
+	if (autoplay.checked !== "6") ctxos.fillText(`${stat.accStr}`, canvasos.width - lineScale * 0.65, lineScale * 2);
 	ctxos.fillStyle = "#fff";
 	ctxos.drawImage(res["Pause"], lineScale * 0.6, lineScale * 0.7, lineScale * 0.63, lineScale * 0.7);
 	if (stat.combo > 2) {
@@ -1586,7 +1586,7 @@ function qwqdraw1(now) {
 		// stat.lastcombo = stat.combo;
 		ctxos.globalAlpha = qwqIn.second < 0.67 ? tween[2](qwqIn.second * 1.5) : (1 - tween[2](qwqOut.second * 1.5));
 		ctxos.font = `${lineScale * 0.5}px Mina`;
-		ctxos.fillText(autoplay.checked ? "AUTOPLAY" : "COMBO", wlen, lineScale * 2.05);
+		ctxos.fillText(autoplay.checked === "y" ? "AUTOPLAY" : "COMBO", wlen, lineScale * 2.05);
 	}
 	//绘制歌名和等级
 	ctxos.globalAlpha = 1;
