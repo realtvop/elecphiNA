@@ -2,7 +2,7 @@
 
 //在Local Storage中添加"debugMode"并赋值为“true”激活开发模式！！！！！！！！！！！！！！！！！！！！！！！！！
 const _i = ['Phigros模拟器', [1, 4, 13], 1611795955, 1637586185];
-const APPVERSION = "0.0.12";
+const APPVERSION = "0.0.14";
 document.oncontextmenu = e => e.preventDefault(); //qwq
 
 String.prototype.times = function(n) {
