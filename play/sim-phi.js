@@ -211,6 +211,50 @@ function resizeCanvas() {
 	pauseButtonsShowed = false;
 }
 
+function pausedMenu() {mdui.dialog({
+	title: 'Paused',
+	content: '',
+	buttons: [
+	  {
+		text: 'Back',
+		onClick: () => mdui.dialog({
+			title: 'Back',
+			content: 'Are you sure to back to the song select page?',
+			buttons: [
+			  {
+				text: 'No',
+				onClick: () => pausedMenu()
+			  },
+			  {
+				text: 'Yes',
+				onClick: () => history.go(-1)
+			  },
+			]
+		})
+	  },
+	  {
+		text: 'Retry',
+		onClick: () => mdui.dialog({
+			title: 'Retry',
+			content: 'Are you sure to retry?',
+			buttons: [
+			  {
+				text: 'No',
+				onClick: () => pausedMenu()
+			  },
+			  {
+				text: 'Yes',
+				onClick: () => replay()
+			  },
+			]
+		})
+	  },
+	  {
+		text: 'Resume',
+		onClick: () => btnPause.click()
+	  }
+	]
+  });}
 const mouse = {}; //存放鼠标事件(用于检测，下同)
 const touch = {}; //存放触摸事件
 const keyboard = {}; //存放键盘事件
@@ -218,11 +262,8 @@ const taps = []; //额外处理tap(试图修复吃音bug)
 const specialClick = { //上下左右四角双击处理
 	time: [0, 0, 0, 0],
 	func: [() => {
-		if (qwqOut.second < 0.67) {if (!isPaused) btnPause.click();}
-		else location.href=`../songSelect/index.html?c=${new URLSearchParams(new URL(location.href).search).get('c')}`;//回到章节
+		if(!isPaused) btnPause.click();
 	}, () => {
-		btnPause.classList.remove("disabled");
-		replay()
 	}, () => {
 		// if (isAutoplay) return;
 		if (!isPaused) btnPause.click();
@@ -412,7 +453,7 @@ class Click {
 	static activate(offsetX, offsetY) {
 		taps.push(new Click(offsetX, offsetY));
 		if (offsetX < lineScale * 1.5 && offsetY < lineScale * 1.5) specialClick.click(0);
-		// if (offsetX > canvasos.width - lineScale * 1.5 && offsetY < lineScale * 1.5) specialClick.click(1);
+		if (offsetX > canvasos.width - lineScale * 1.5 && offsetY < lineScale * 1.5) specialClick.click(1);
 		if (offsetX < lineScale * 1.5 && offsetY > canvasos.height - lineScale * 1.5) specialClick.click(2);
 		if (offsetX > canvasos.width - lineScale * 1.5 && offsetY > canvasos.height - lineScale * 1.5) specialClick.click(3);
 		if (qwqEnd.second > 0) qwq[3] = qwq[3] > 0 ? -qwqEnd.second : qwqEnd.second;
@@ -571,7 +612,7 @@ class Judgements extends Array {
 				}
 			} else if (i.type == 2) {
 				if (i.status == 4 && i.realTime - realTime < 0) {
-					if ($("hitSong").checked) playSound(res["HitSong1"], false, true, 0);
+					if ($("hitSong").checked) playSound(res["HitSong1"], false, true, 0, localStorage.getItem("input-hitSongVolume"));
 					clickEvents1.push(ClickEvent1.getClickPerfect(i.projectX, i.projectY));
 					stat.addCombo(4, 2);
 					i.scored = true;
@@ -857,13 +898,13 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 const actx = (new Audio()).canPlayType("audio/ogg") == "" ? new oggmented.OggmentedAudioContext() : new AudioContext(); //兼容Safari
 const stopPlaying = [];
 const gain = actx.createGain();
-const playSound = (res, loop, isOut, offset, volume=0.1) => {
+const playSound = (res, loop, isOut, offset, volume=1) => {
 	const gain2 = actx.createGain();
 	const bufferSource = actx.createBufferSource();
 	bufferSource.buffer = res;
 	// bufferSource.value = 0; // 音量
 	bufferSource.loop = loop; //循环播放
-	gain2.gain.value = volume || 1; // 音量
+	gain2.gain.value = volume; // 音量
 	bufferSource.connect(gain2);
 	if (isOut) gain2.connect(actx.destination);
 	bufferSource.start(0, offset);
@@ -932,9 +973,10 @@ window.onload = function () {
 				};
 			});
 		}));
-		res["JudgeLineMP"] = await createImageBitmap(imgShader(res["JudgeLine"], "#feffa9"));
-		res["JudgeLineAP"] = await createImageBitmap(imgShader(res["JudgeLine"], "#a3ffac"));
-		res["JudgeLineFC"] = await createImageBitmap(imgShader(res["JudgeLine"], "#a2eeff"));
+		res["JudgeLineAu"] = await createImageBitmap(imgShader(res["JudgeLine"], "#a2ffee"));
+		res["JudgeLineMP"] = isAutoplay ? res["JudgeLineAu"] : await createImageBitmap(imgShader(res["JudgeLine"], "#feffa9"));
+		res["JudgeLineAP"] = isAutoplay ? res["JudgeLineAu"] : await createImageBitmap(imgShader(res["JudgeLine"], "#a3ffac"));
+		res["JudgeLineFC"] = isAutoplay ? res["JudgeLineAu"] : await createImageBitmap(imgShader(res["JudgeLine"], "#a2eeff"));
 		res["TapBad"] = await createImageBitmap(imgShader(res["Tap2"], "#6c4343"));
 		//res["btnRD"] = await createImageBitmap(res["Tap2"]);
 		res["Clicks"] = {};
@@ -1139,7 +1181,7 @@ function prerenderChart(chart) {
 		i.alpha = 0;
 		i.rotation = 0;
 		i.positionY = 0; //临时过渡用
-		i.images = [res["JudgeLine"], res["JudgeLineMP"], res["JudgeLineAP"], res["JudgeLineFC"]];
+		i.images = [res["JudgeLine"], res["JudgeLineMP"], res["JudgeLineAP"], res["JudgeLineFC"], res["JudgeLineAu"]];
 		i.imageH = 0.008;
 		i.imageW = 1.042;
 		i.imageB = 0;
@@ -1290,6 +1332,7 @@ btnPause.addEventListener("click", function () {
 		this.value = "继续";
 		curTime = timeBgm;
 		while (stopPlaying.length) stopPlaying.shift()();
+		pausedMenu();
 		// new Notification("Elecphi", {body: "已暂停"});
 	} else {
 		resumingBeginTime = Date.now();
@@ -1575,10 +1618,17 @@ function qwqdraw1(now) {
 	//ctxos.textAlign = "center";
 	if(stat.noteRank[5] + stat.noteRank[7] > stat.noteRank[1] + stat.noteRank[3])ctxos.fillStyle = "#0f0";
 	if(stat.noteRank[5] + stat.noteRank[7] < stat.noteRank[1] + stat.noteRank[3])ctxos.fillStyle = "#6cf";
-	if (autoplay.checked !== "6") ctxos.fillText(`${stat.accStr}`, canvasos.width - lineScale * 0.65, lineScale * 2);
+	ctxos.fillText(`${isAutoplay ? "AUTOPLAY" : stat.accStr}`, canvasos.width - lineScale * 0.65, lineScale * 2);
 	ctxos.fillStyle = "#fff";
 	ctxos.drawImage(res["Pause"], lineScale * 0.6, lineScale * 0.7, lineScale * 0.63, lineScale * 0.7);
-	if (stat.combo > 2) {
+	if (isPaused) {
+		ctxos.textAlign = "center";	
+		ctxos.font = `${lineScale * 1.32}px Mina`;
+		ctxos.fillText(stat.combo > 2 ? stat.combo : "!", wlen, lineScale * 1.375);
+		ctxos.globalAlpha = qwqIn.second < 0.67 ? tween[2](qwqIn.second * 1.5) : (1 - tween[2](qwqOut.second * 1.5));
+		ctxos.font = `${lineScale * 0.5}px Mina`;
+		ctxos.fillText("PAUSED", wlen, lineScale * 2.05);
+	} else if (stat.combo > 2 && !isAutoplay) {
 		ctxos.textAlign = "center";
 		ctxos.font = `${lineScale * 1.32}px Mina`;
 		ctxos.fillText(stat.combo, wlen, lineScale * 1.375);
@@ -1646,7 +1696,7 @@ function qwqdraw1(now) {
 		ctxos.textBaseline = "middle";
 		ctxos.font = `${lineScale * 2}px Mina`;
 		ctxos.fillText(timeBeforeBegin, canvasos.width / 2, canvasos.height / 2);
-	} else if (isPaused) {
+	} /* else if (isPaused) {
 		// todo
 		ctxos.fillStyle = "#000"; //背景变暗
 		ctxos.globalAlpha = 0.7; //背景不透明度
@@ -1673,7 +1723,7 @@ function qwqdraw1(now) {
 			lineScale * 1.3
 		);
 		pauseButtonsShowed = true;
-	}
+	} */
 }
 
 //	结束处理 

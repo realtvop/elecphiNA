@@ -40,7 +40,6 @@ body::before {
 canvas.canvas#canvas{
 	height: 100%;
 	width: 100%;
-	background-color: transparent;
 }
 .loadingEmbedFrame{
 	position: fixed;
