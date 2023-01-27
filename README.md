@@ -20,7 +20,7 @@
 
 #### 各平台推荐浏览器
 | 平台 | 浏览器 |
-| --- | --- | --- |
+| --- | --- |
 | Windows | Chrome |
 | macOS | Safari |
 | Linux | Chrome |
