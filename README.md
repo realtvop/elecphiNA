@@ -18,7 +18,16 @@
 
 本程序(电脑端)基于 Electron 框架构建,不用(过多)考虑兼容性问题
 
-以下为本人(作者)做过测试的平台及其兼容情况:
+#### 各平台推荐浏览器
+| 平台 | 浏览器 |
+| --- | --- | --- |
+| Windows | Chrome |
+| macOS | Safari |
+| Linux | Chrome |
+| iOS/iPadOS | Safari |
+| Android/HarmonyOS | Via(AndroidWebView) |
+
+#### 以下为本人(作者)做过测试的平台及其兼容情况:
 | 系统 | 版本 | 兼容性 |
 | --- | --- | --- |
 | macOS (Electron) | Ventura(13 Beta 22A5331f) | 完美 |
