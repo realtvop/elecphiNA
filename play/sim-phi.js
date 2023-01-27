@@ -1345,10 +1345,7 @@ btnPause.addEventListener("click", function () {
 		pausemenu = pausedMenu();
 		// new Notification("Elecphi", {body: "已暂停"});
 	} else {
-		if(pausemenu) {
-			pausemenu.close();
-			pausemenu = null;
-		}
+		pausemenu.close();
 		resumingBeginTime = Date.now();
 		timeBeforeBegin = "3";
 		//document.querySelector('div#pauseOverlay.pauseOverlay').innerHTML="3";
@@ -1635,14 +1632,7 @@ function qwqdraw1(now) {
 	ctxos.fillText(`${isAutoplay ? "AUTOPLAY" : stat.accStr}`, canvasos.width - lineScale * 0.65, lineScale * 2);
 	ctxos.fillStyle = "#fff";
 	ctxos.drawImage(res["Pause"], lineScale * 0.6, lineScale * 0.7, lineScale * 0.63, lineScale * 0.7);
-	if (isPaused) {
-		ctxos.textAlign = "center";	
-		ctxos.font = `${lineScale * 1.32}px Mina`;
-		ctxos.fillText(stat.combo > 2 ? stat.combo : "!", wlen, lineScale * 1.375);
-		ctxos.globalAlpha = qwqIn.second < 0.67 ? tween[2](qwqIn.second * 1.5) : (1 - tween[2](qwqOut.second * 1.5));
-		ctxos.font = `${lineScale * 0.5}px Mina`;
-		ctxos.fillText("PAUSED", wlen, lineScale * 2.05);
-	} else if (stat.combo > 2 && !isAutoplay) {
+	if (stat.combo > 2 && !isAutoplay) {
 		ctxos.textAlign = "center";
 		ctxos.font = `${lineScale * 1.32}px Mina`;
 		ctxos.fillText(stat.combo, wlen, lineScale * 1.375);
