@@ -98,6 +98,7 @@ var pauseButtonsShowed = false;
 var tmps = new Map();
 const parser = new UAParser();
 const showPlatform = parser.getBrowser().name + " on " + parser.getOS().name;
+var pausemenu;
 var nowShowing = "play"; // 当前展示页面 songSelect/play
 var songSelectValue = {
 	grades: ["ez", "hd", "in", "at"],       // 所有可选难度,不做修改
@@ -211,49 +212,56 @@ function resizeCanvas() {
 	pauseButtonsShowed = false;
 }
 
-function pausedMenu() {mdui.dialog({
-	title: 'Paused',
-	content: '',
-	buttons: [
-	  {
-		text: 'Back',
-		onClick: () => mdui.dialog({
-			title: 'Back',
-			content: 'Are you sure to back to the song select page?',
-			buttons: [
-			  {
-				text: 'No',
-				onClick: () => pausedMenu()
-			  },
-			  {
-				text: 'Yes',
-				onClick: () => history.go(-1)
-			  },
-			]
-		})
-	  },
-	  {
-		text: 'Retry',
-		onClick: () => mdui.dialog({
-			title: 'Retry',
-			content: 'Are you sure to retry?',
-			buttons: [
-			  {
-				text: 'No',
-				onClick: () => pausedMenu()
-			  },
-			  {
-				text: 'Yes',
-				onClick: () => replay()
-			  },
-			]
-		})
-	  },
-	  {
-		text: 'Resume',
-		onClick: () => btnPause.click()
-	  }
-	]
+function pausedMenu() {
+	return mdui.dialog({
+		title: 'Paused',
+		content: '',
+		buttons: [
+		{
+			text: 'Back',
+			onClick: () => mdui.dialog({
+				title: 'Back',
+				content: 'Are you sure to back to the song select page?',
+				buttons: [
+				{
+					text: 'No',
+					onClick: () => pausedMenu()
+				},
+				{
+					text: 'Yes',
+					onClick: () => history.go(-1)
+				},
+				],
+				modal: true,
+				closeOnEsc: false,
+			})
+		},
+		{
+			text: 'Retry',
+			onClick: () => mdui.dialog({
+				title: 'Retry',
+				content: 'Are you sure to retry?',
+				buttons: [
+				{
+					text: 'No',
+					onClick: () => pausedMenu()
+				},
+				{
+					text: 'Yes',
+					onClick: () => replay()
+				},
+				],
+				modal: true,
+				closeOnEsc: false,
+			})
+		},
+		{
+			text: 'Resume',
+			onClick: () => btnPause.click()
+		}
+		],
+		modal: true,
+		closeOnEsc: false,
   });}
 const mouse = {}; //存放鼠标事件(用于检测，下同)
 const touch = {}; //存放触摸事件
@@ -821,7 +829,9 @@ window.addEventListener("keydown", function (evt) {
 	if (document.activeElement.classList.value == "input") return;
 	if (btnPlay.value != "停止") return;
 	evt.preventDefault();
-	if (evt.key == "Shift" && (!isPaused || !timeBeforeBegin)) btnPause.click();
+	if (evt.key == "Shift" && (!isPaused || !timeBeforeBegin)) {
+		btnPause.click();
+	}
 	else if (keyboard[evt.code] instanceof Click);
 	else keyboard[evt.code] = Click.activate(NaN, NaN);
 }, false);
@@ -1332,9 +1342,13 @@ btnPause.addEventListener("click", function () {
 		this.value = "继续";
 		curTime = timeBgm;
 		while (stopPlaying.length) stopPlaying.shift()();
-		pausedMenu();
+		pausemenu = pausedMenu();
 		// new Notification("Elecphi", {body: "已暂停"});
 	} else {
+		if(pausemenu) {
+			pausemenu.close();
+			pausemenu = null;
+		}
 		resumingBeginTime = Date.now();
 		timeBeforeBegin = "3";
 		//document.querySelector('div#pauseOverlay.pauseOverlay').innerHTML="3";
