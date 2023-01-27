@@ -1,3 +1,4 @@
 chart
 assets/images/*
 .DS_Store
+node_modules
