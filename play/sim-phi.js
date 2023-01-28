@@ -983,7 +983,7 @@ window.onload = function () {
 				};
 			});
 		}));
-		res["JudgeLineAu"] = await createImageBitmap(imgShader(res["JudgeLine"], "#a2ffee"));
+		res["JudgeLineAu"] = await createImageBitmap(imgShader(res["JudgeLine"], "#a2ffcc"));
 		res["JudgeLineMP"] = isAutoplay ? res["JudgeLineAu"] : await createImageBitmap(imgShader(res["JudgeLine"], "#feffa9"));
 		res["JudgeLineAP"] = isAutoplay ? res["JudgeLineAu"] : await createImageBitmap(imgShader(res["JudgeLine"], "#a3ffac"));
 		res["JudgeLineFC"] = isAutoplay ? res["JudgeLineAu"] : await createImageBitmap(imgShader(res["JudgeLine"], "#a2eeff"));
@@ -1426,7 +1426,7 @@ function loop() {
 	ctx.globalAlpha = 0.8;
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
-	if (autoplay.checked !== "6") ctx.fillText(`Elecphi v${APPVERSION} by 飞机上的长电视 with lchzh3473/sim-phi - ${showPlatform}`, (canvas.width + canvasos.width) / 4, y);
+	ctx.fillText(`Elecphi v${APPVERSION} by 飞机上的长电视 with lchzh3473/sim-phi - ${showPlatform}`, canvas.width / 2, y);
 	/* ctx.textAlign = "left";
 	if (showInfo.checked) {
 		ctx.fillText(`Player:${isAutoplay ? "AUTO" : window.localStorage.getItem("playerName")}     Chart: ${$("input-designer").value}     Illustration: ${$("input-illustrator").value}`, (canvas.width + canvasos.width) / 2 - canvasos.width + lineScale * 0.1, y);
@@ -1660,18 +1660,29 @@ function qwqdraw1(now) {
 	if (qwqIn.second < 0.67) ctxos.globalAlpha = tween[2](qwqIn.second * 1.5);
 	else ctxos.globalAlpha = 1 - tween[2](qwqOut.second * 1.5);
 	ctxos.textBaseline = "middle";
+	ctxos.textAlign = "right";
+	ctxos.font = `${lineScale * 0.25}px Mina`;
+	ctxos.fillText("FPS", canvasos.width - lineScale * 0.05, lineScale * 0.8);
 	ctxos.font = `${lineScale * 0.4}px Mina`;
+	ctxos.fillText(frameTimer.fps, canvasos.width - lineScale * 0.05, lineScale * 0.5);
+	ctxos.textAlign = "left";
 	if (showInfo.checked) {
-		ctxos.textAlign = "left";
 		ctxos.fillText(`${((timeBgm  /duration) * 100).toFixed(1)}% ${time2Str(timeBgm)}/${time2Str(duration)} ${time2Str(duration - timeBgm)} LEFT`, lineScale * 0.05, lineScale * 0.4);
-		ctxos.textAlign = "right";
-		ctxos.fillText(frameTimer.fps, canvasos.width - lineScale * 0.05, lineScale * 0.5);
 	}
 	ctxos.textBaseline = 'alphabetic';
 	if (/* showPoint.checked */true) stat.combos.forEach((val, idx) => {
 		ctxos.fillStyle = comboColor[idx];
 		ctxos.fillText(val, lineScale * idx * 1.1 + lineScale * 0.25, canvasos.height - lineScale * 0.1);
 	});
+
+	//用户名
+	ctxos.fillStyle = "#fff";
+	ctxos.textAlign = "right";
+	ctxos.font = `${lineScale * 0.65}px Mina`;
+	ctxos.fillText(localStorage.getItem("playerName") || "GUEST", canvasos.width - lineScale * 0.5, canvasos.height - lineScale * 0.66);
+	ctxos.font = `${lineScale * 0.3}px Mina`;
+	ctxos.fillText("PLAYER", canvasos.width - lineScale * 0.5, canvasos.height - lineScale * 0.25);
+
 	//判定线函数，undefined/0:默认,1:非,2:恒成立
 	function drawLine(bool) {
 		ctxos.globalAlpha = 1;
